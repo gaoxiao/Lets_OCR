@@ -235,10 +235,15 @@ def infer_one(im_name, net):
     img = torch.Tensor(img)
 
     tttt = time.time()
+
+    img = img.cuda()
+    print img
+
     v, score, side = net(img, val=True)
     print("net takes time:{}s".format(time.time() - tttt))
     tttt = time.time()
 
+    score = score.cpu()
     result = []
     for i in range(score.shape[0]):
         for j in range(score.shape[1]):
@@ -366,6 +371,7 @@ if __name__ == '__main__':
         net.load_state_dict(torch.load(MODEL, map_location=running_mode))
     else:
         net.load_state_dict(torch.load(MODEL))
+        net = net.cuda()
     print(net)
     net.eval()
 
