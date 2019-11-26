@@ -1,0 +1,12 @@
+version: '2.3'
+services:
+  lets_ocr:
+    runtime: nvidia
+    image: "lets_ocr"
+    stdin_open: true
+    tty: true
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=1
+    volumes:
+      - .:/code
+    command: /bin/bash

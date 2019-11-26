@@ -360,7 +360,8 @@ def random_test(net):
 """
 
 if __name__ == '__main__':
-    running_mode = sys.argv[2]  # cpu or gpu
+    # running_mode = sys.argv[2]  # cpu or gpu
+    running_mode = 'gpu' # cpu or gpu
     print("Mode: %s" % running_mode)
     net = Net.CTPN()
     if running_mode == 'cpu':
