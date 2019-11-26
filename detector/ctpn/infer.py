@@ -174,6 +174,11 @@ def get_anchor_h(anchor, v):
 
 def get_successions(v, anchors=[]):
     texts = []
+
+    tttt = time.time()
+    print("get_successions 1 takes time:{}s".format(time.time() - tttt))
+    tttt = time.time()
+
     for i, anchor in enumerate(anchors):
         neighbours = []
         neighbours.append(i)
@@ -190,7 +195,8 @@ def get_successions(v, anchors=[]):
                 neighbours.append(j)
         if len(neighbours) != 0:
             texts.append(neighbours)
-
+    print("get_successions 1 takes time:{}s".format(time.time() - tttt))
+    tttt = time.time()
     need_merge = True
     while need_merge:
         need_merge = False
@@ -205,9 +211,10 @@ def get_successions(v, anchors=[]):
                         texts[i] = list(set(texts[i]))
                         texts[j] = []
                         need_merge = True
-
+    print("get_successions 2 takes time:{}s".format(time.time() - tttt))
+    tttt = time.time()
     result = []
-    print(texts)
+    # print(texts)
     for text in texts:
         if len(text) < MIN_ANCHOR_BATCH:
             continue
@@ -215,6 +222,7 @@ def get_successions(v, anchors=[]):
         for j in text:
             local.append(anchors[j])
         result.append(local)
+    print("get_successions 3 takes time:{}s".format(time.time() - tttt))
     return result
 
 
@@ -225,13 +233,21 @@ def infer_one(im_name, net):
     img = img.transpose(2, 0, 1)
     img = img[np.newaxis, :, :, :]
     img = torch.Tensor(img)
+
+    tttt = time.time()
     v, score, side = net(img, val=True)
+    print("net takes time:{}s".format(time.time() - tttt))
+    tttt = time.time()
+
     result = []
     for i in range(score.shape[0]):
         for j in range(score.shape[1]):
             for k in range(score.shape[2]):
                 if score[i, j, k, 1] > THRESH_HOLD:
                     result.append((j, k, i, float(score[i, j, k, 1].detach().numpy())))
+
+    print("filter takes time:{}s".format(time.time() - tttt))
+    tttt = time.time()
 
     for_nms = []
     for box in result:
@@ -244,12 +260,15 @@ def infer_one(im_name, net):
     for i in nms_result:
         out_nms.append(for_nms[i, 0:8])
 
+    print('out_nms size: {}'.format(len(out_nms)))
     connect = get_successions(v, out_nms)
+    print("get_successions takes time:{}s".format(time.time() - tttt))
+    tttt = time.time()
     texts = get_text_lines(connect, im.shape)
 
     for box in texts:
         box = np.array(box)
-        print(box)
+        # print(box)
         lib.draw_image.draw_ploy_4pt(im, box[0:8], thickness=2)
 
     _, basename = os.path.split(im_name)
@@ -264,7 +283,6 @@ def infer_one(im_name, net):
         h = math.pow(10, vh) * ha
         lib.draw_image.draw_box_2pt(im, for_nms[i, 0:4])
     _, basename = os.path.split(im_name)
-    cv2.imwrite('./infer_anchor_'+basename, im)
 
 
 def random_test(net):
@@ -351,11 +369,25 @@ if __name__ == '__main__':
     print(net)
     net.eval()
 
-    if sys.argv[1] == 'random':
-        random_test(net)
-    else:
-        url = sys.argv[1]
-        infer_one(url, net)
+    # if sys.argv[1] == 'random':
+    #     random_test(net)
+    # else:
+    #     url = sys.argv[1]
+    #     infer_one(url, net)
+
+    import time
+    root = '../common/OCR_TEST'
+    for p in os.listdir(root)[:5]:
+        if not p.endswith('jpg'):
+            continue
+        p = os.path.join(root, p)
+        tttt = time.time()
+        infer_one(p, net)
+        print("It takes time:{}s".format(time.time() - tttt))
+        print("---------------------------------------")
+
+
+
 
 
 
