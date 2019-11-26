@@ -33,5 +33,5 @@ docker run --runtime=nvidia \
 --rm \
 --shm-size=2g \
 --name LETS_OCR \
-chineseocr \
+5d674d89669b \
 /bin/bash

@@ -227,6 +227,7 @@ def get_successions(v, anchors=[]):
 
 
 def infer_one(im_name, net):
+
     im = cv2.imread(im_name)
     im = lib.dataset_handler.scale_img_only(im)
     img = copy.deepcopy(im)
@@ -237,7 +238,6 @@ def infer_one(im_name, net):
     tttt = time.time()
 
     img = img.cuda()
-    print img
 
     v, score, side = net(img, val=True)
     print("net takes time:{}s".format(time.time() - tttt))
@@ -277,7 +277,7 @@ def infer_one(im_name, net):
         lib.draw_image.draw_ploy_4pt(im, box[0:8], thickness=2)
 
     _, basename = os.path.split(im_name)
-    cv2.imwrite('./infer_'+basename, im)
+    cv2.imwrite(os.path.join(TEST_RESULT, os.path.basename(basename)), im)
 
     for i in nms_result:
         vc = v[int(for_nms[i, 7]), 0, int(for_nms[i, 5]), int(for_nms[i, 6])]
@@ -293,10 +293,6 @@ def infer_one(im_name, net):
 def random_test(net):
     test_pair = gen_test_images(IMG_ROOT, 0)
     print(test_pair)
-    if os.path.exists(TEST_RESULT):
-        shutil.rmtree(TEST_RESULT)
-
-    os.mkdir(TEST_RESULT)
 
     for t in test_pair:
         im = cv2.imread(t)
@@ -374,6 +370,11 @@ if __name__ == '__main__':
         net = net.cuda()
     print(net)
     net.eval()
+
+    if os.path.exists(TEST_RESULT):
+        shutil.rmtree(TEST_RESULT)
+
+    os.mkdir(TEST_RESULT)
 
     # if sys.argv[1] == 'random':
     #     random_test(net)
