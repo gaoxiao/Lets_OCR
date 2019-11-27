@@ -369,10 +369,10 @@ def convert_to_4pts(bboxes):
     text_recs[:, 1] = bboxes[:, 5] * bboxes[:, 0] + b1
     text_recs[:, 2] = bboxes[:, 2]
     text_recs[:, 3] = bboxes[:, 5] * bboxes[:, 2] + b1
-    text_recs[:, 4] = bboxes[:, 0]
-    text_recs[:, 5] = bboxes[:, 5] * bboxes[:, 0] + b2
-    text_recs[:, 6] = bboxes[:, 2]
-    text_recs[:, 7] = bboxes[:, 5] * bboxes[:, 2] + b2
+    text_recs[:, 4] = bboxes[:, 2]
+    text_recs[:, 5] = bboxes[:, 5] * bboxes[:, 2] + b2
+    text_recs[:, 6] = bboxes[:, 0]
+    text_recs[:, 7] = bboxes[:, 5] * bboxes[:, 0] + b2
 
     return text_recs
 
@@ -448,7 +448,7 @@ def infer_one_test(im_name, net):
     for box in text_recs:
         box = np.array(box)
         # print(box)
-        lib.draw_image.draw_ploy_4pt_cross(im, box, thickness=2)
+        lib.draw_image.draw_ploy_4pt(im, box, thickness=2)
     cv2.imwrite(os.path.join(TEST_RESULT, os.path.basename(basename)), im)
 
     for p in text_proposals:
@@ -499,10 +499,10 @@ if __name__ == '__main__':
     #     print("It takes time:{}s".format(time.time() - tttt))
     #     print("---------------------------------------")
 
-    # img_file = './2.png'
-    img_file = '../common/OCR_TEST/000017.jpg'
+    img_file = './test2.png'
+    # img_file = '../common/OCR_TEST/000017.jpg'
     tttt = time.time()
-    infer_one(img_file, net)
-    # infer_one_test(img_file, net)
+    # infer_one(img_file, net)
+    infer_one_test(img_file, net)
     print("It takes time:{}s".format(time.time() - tttt))
     print("---------------------------------------")
