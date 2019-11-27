@@ -22,6 +22,13 @@ def draw_ploy_4pt(img, pt, color=(0, 255, 255), thickness=1):
     return cv2.polylines(img, [pts], True, color, thickness)
 
 
+def draw_ploy_4pt_cross(img, pt, color=(0, 255, 255), thickness=1):
+    pts = np.array([[pt[0], pt[1]], [pt[2], pt[3]], [pt[6], pt[7]], [pt[4], pt[5]]], np.int32)
+    # print(pts)
+    pts = pts.reshape((-1, 1, 2))
+    return cv2.polylines(img, [pts], True, color, thickness)
+
+
 def draw_box_2pt(img, pt, color=(0, 255, 0), thickness=1):
     if not isinstance(pt[0], int):
         pt = [int(pt[i]) for i in range(4)]
@@ -63,7 +70,7 @@ def cal_line_y(pt1, pt2, x, form):
         x = float(x)
     if (pt1[0] - pt2[0]) == 0:
         return -1
-    return form(((pt1[1] - pt2[1])/(pt1[0] - pt2[0])) * (x - pt1[0]) + pt1[1])
+    return form(((pt1[1] - pt2[1]) / (pt1[0] - pt2[0])) * (x - pt1[0]) + pt1[1])
 
 
 def bi_range(start, end):

@@ -4,8 +4,11 @@ A simple and light-weight implementation of CTPN, a classical text detection net
 which greatly simplifies the coding complexity and it makes easier to understand the CTPN inner mechanism.
 
 ## Environment
+0. ```pip install -r requirements.txt```
 1. ```cd ctpn directory```
 2. ```make```
+3. ```cd ctpn/lib/nms_utils```
+4. ```sh make.sh```
 
 ## Train
 1. Download this project, and prepare the OCR dataset([MSRA_TD500 & tianchi_icpr](https://pan.baidu.com/s/1kHTI5fg_oTOlQIVjOpFC8A))

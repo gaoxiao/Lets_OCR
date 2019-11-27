@@ -56,7 +56,7 @@ def cal_line_y(pt1, pt2, x, form):
         x = float(x)
     if (pt1[0] - pt2[0]) == 0:
         return -1
-    return form(((pt1[1] - pt2[1])/(pt1[0] - pt2[0])) * (x - pt1[0]) + pt1[1])
+    return form(((pt1[1] - pt2[1]) / (pt1[0] - pt2[0])) * (x - pt1[0]) + pt1[1])
 
 
 def bi_range(start, end):
@@ -66,6 +66,7 @@ def bi_range(start, end):
         return range(end, start)
     else:
         return range(start, end)
+
 
 def trans_to_2pt(position, cy, h, anchor_width=16):
     x_left = position * anchor_width
