@@ -2,7 +2,7 @@
 import cv2
 import numpy as np
 
-from ..config import cfg
+from config import cfg
 
 
 def im_list_to_blob(ims):

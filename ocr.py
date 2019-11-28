@@ -1,8 +1,8 @@
 # coding=utf-8
 import os
 import shutil
-import time
 
+from common.timeit_decorator import timeit
 from crnn.recongnizer import CRNNRecognizer
 from ctpn.detector import CTPNDetector
 
@@ -14,6 +14,7 @@ MIN_ANCHOR_BATCH = 2
 MODEL = './model/ctpn-msra_ali-9-end.model'
 
 
+@timeit
 def ocr_one(im_name, detector, recognizer):
     img, boxes = detector.detect(im_name)
     result = recognizer.recognize(img, boxes)
@@ -32,7 +33,4 @@ if __name__ == '__main__':
 
     # img_file = './test2.png'
     img_file = 'common/OCR_TEST/000452.jpg'
-    tttt = time.time()
     ocr_one(img_file, detector, recognizer)
-    print("It takes time:{}s".format(time.time() - tttt))
-    print("---------------------------------------")

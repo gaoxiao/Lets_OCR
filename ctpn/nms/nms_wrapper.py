@@ -1,8 +1,8 @@
 from config import cfg
-from nms_utils.cython_nms import nms as cython_nms
+from cython_nms import nms as cython_nms
 
 try:
-    from nms_utils.gpu_nms import gpu_nms
+    from gpu_nms import gpu_nms
 except:
     gpu_nms = cython_nms
 pass

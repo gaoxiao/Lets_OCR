@@ -11,7 +11,7 @@ import numpy as np
 
 # TODO: make fast_rcnn irrelevant
 # >>>> obsolete, because it depends on sth outside of this project
-from ..config import cfg
+from config import cfg
 
 
 # <<<< obsolete
