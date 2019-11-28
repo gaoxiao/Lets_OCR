@@ -10,25 +10,19 @@ import Net.net as Net
 import lib.dataset_handler
 import lib.draw_image
 import lib.utils
-from cfg import Config as cfg
+from common.cfg import Config as cfg
 from lib.nms_wrapper import nms
 from text_proposal_connector import TextProposalConnector
-
-anchor_height = [11, 16, 22, 32, 46, 66, 94, 134, 191, 273]
-TEST_RESULT = './test_result'
-THRESH_HOLD = 0.7
-MODEL = './model/ctpn-msra_ali-9-end.model'
 
 
 class CTPNDetector():
     def __init__(self):
-        running_mode = 'gpu'  # cpu or gpu
 
         ctpn = Net.CTPN()
-        if running_mode == 'cpu':
-            ctpn.load_state_dict(torch.load(MODEL, map_location=running_mode))
+        if cfg.RUNNING_MODE == 'cpu':
+            ctpn.load_state_dict(torch.load(cfg.CTPN_MODEL, map_location=cfg.RUNNING_MODE))
         else:
-            ctpn.load_state_dict(torch.load(MODEL))
+            ctpn.load_state_dict(torch.load(cfg.CTPN_MODEL))
             ctpn = ctpn.cuda()
         print(ctpn)
         ctpn.eval()
@@ -54,7 +48,7 @@ class CTPNDetector():
         dim_2 = orig_shape[2]
         dim_1 = orig_shape[1] * dim_2
         flatten = score[:, :, :, 1].flatten()
-        mask = flatten >= THRESH_HOLD
+        mask = flatten >= cfg.BOX_THRESH_HOLD
         indices = torch.nonzero(mask).flatten()
         masked_scores = flatten[mask]
         new_result = torch.Tensor(masked_scores.shape[0], 4)
@@ -69,7 +63,7 @@ class CTPNDetector():
 
         proposals = []
         for box in result:
-            pt = lib.utils.trans_to_2pt(box[1], box[0] * 16 + 7.5, anchor_height[int(box[2])])
+            pt = lib.utils.trans_to_2pt(box[1], box[0] * 16 + 7.5, cfg.ANCHOR_HEIGHT[int(box[2])])
             proposals.append([pt[0], pt[1], pt[2], pt[3]])
         proposals = np.array(proposals, dtype=np.float32)
 
@@ -98,11 +92,11 @@ class CTPNDetector():
             box = np.array(box)
             # print(box)
             lib.draw_image.draw_ploy_4pt(out_im, box, thickness=2)
-        cv2.imwrite(os.path.join(TEST_RESULT, os.path.basename(basename)), out_im)
+        cv2.imwrite(os.path.join(cfg.TEST_RESULT, os.path.basename(basename)), out_im)
 
         for p in text_proposals:
             lib.draw_image.draw_box_2pt(out_im, p)
-        cv2.imwrite(os.path.join(TEST_RESULT, 'XX_' + basename), out_im)
+        cv2.imwrite(os.path.join(cfg.TEST_RESULT, 'XX_' + basename), out_im)
 
         return im, text_recs
 

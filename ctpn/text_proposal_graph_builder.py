@@ -4,7 +4,7 @@ import os, sys
 parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parentdir)
 
-from cfg import Config as cfg
+from common.cfg import Config as cfg
 from other import Graph
 
 

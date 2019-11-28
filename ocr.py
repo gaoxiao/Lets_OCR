@@ -6,7 +6,7 @@ import time
 from crnn.recongnizer import CRNNRecognizer
 from ctpn.detector import CTPNDetector
 
-IMG_ROOT = "../common/OCR_TEST"
+IMG_ROOT = "./common/OCR_TEST"
 TEST_RESULT = './test_result'
 NMS_THRESH = 0.3
 NEIGHBOURS_MIN_DIST = 50
