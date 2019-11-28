@@ -32,5 +32,6 @@ if __name__ == '__main__':
     os.mkdir(TEST_RESULT)
 
     # img_file = './test2.png'
-    img_file = 'common/OCR_TEST/000452.jpg'
+    # img_file = 'common/OCR_TEST/000142.jpg'
+    img_file = '2.jpg'
     ocr_one(img_file, detector, recognizer)

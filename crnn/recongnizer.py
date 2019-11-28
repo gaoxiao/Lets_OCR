@@ -6,7 +6,7 @@ from PIL import Image
 
 from common.cfg import Config as cfg
 from common.timeit_decorator import timeit
-from crnn.image_util import union_rbox, rotate_cut_img
+from crnn.image_util import union_rbox, rotate_cut_img, sort_box
 from crnn.keys import alphabetChinese
 from crnn.network_torch import CRNN
 
@@ -28,6 +28,7 @@ class CRNNRecognizer():
     @timeit
     def recognize(self, img, boxes):
         im = Image.fromarray(img)
+        boxes = sort_box(boxes)
         newBoxes = []
         for index, box in enumerate(boxes):
             partImg, box = rotate_cut_img(im, box, cfg.CRNN_LEFTADJUSTALPH, cfg.CRNN_RIGHTADJUSTALPH)
